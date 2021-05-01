@@ -9,11 +9,21 @@ User.init(
         firstName: 
         {
             type: DataTypes.STRING,
-            allowNull: false
+            notEmpty: true
         },
         lastName: {
           type: DataTypes.STRING,
-          allowNull: false
+          notEmpty: true
+        },
+        email: {
+          type: DataTypes.STRING,
+          isEmail: true,
+          notEmpty: true,
+          unique: true
+        },
+        password: {
+          type: DataTypes.TEXT,
+          notEmpty: true
         }
     }, {
         sequelize,

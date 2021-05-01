@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
@@ -7,6 +8,9 @@ const io = require('./components/socket/socket')
 const sequelize = require('./db/db')
 const db = require('./db/db')
 const Message = require('./models/Message')
+const { authenticate } = require('./db/db')
+const jwt = require('jsonwebtoken')
+const { RedoTwoTone } = require('@material-ui/icons')
 
 
 io.on('connection', (socket) => {
@@ -35,7 +39,7 @@ db.authenticate().then(
 })
 
 async function synchronisation() {
-    await Message.sync({ force: true });
+    await db.sync({ force: true });
     console.log('all tables was updated')
 }
 
@@ -44,7 +48,8 @@ async function synchronisation() {
 
 
 app.get('/', (request, response) => response.send('index'))
-app.use('/users', require('./components/users/list'))
+app.use('/users',authenticateToken, require('./components/users/list'))
+app.use('/auth', require('./components/auth/auth'))
 
 // create Message
 
@@ -62,5 +67,18 @@ app.post('/create_messages', (req, res) => {
     ).catch(e => console.log(e))
 }
 );
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return  res.sendStatus(401);
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user)=> {
+        if (err) return res.sendStatus(401)
+        res.user = user;
+
+        next();
+    })
+}
 
 app.listen(PORT, console.log(`server started on ${PORT}`))
