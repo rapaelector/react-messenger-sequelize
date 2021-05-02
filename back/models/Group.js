@@ -9,6 +9,11 @@ Group.init(
         {
             type: DataTypes.STRING,
             allowNull: false
+        }, 
+        groupUserIds: 
+        {
+            type: DataTypes.TEXT,
+            allowNull: false
         }
     }, {
         sequelize,

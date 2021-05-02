@@ -12,14 +12,25 @@ export function* login(action) {
  }
 
 export function* checkUser(action) {
-   console.log('check');
     try {
        const response = yield call(api.getCurrentUser, action.payload);
        if (response.id != action.payload.uid) {
          yield put({type: "USER_NONVALID", payload: {error:'User non valid'}});
+         return;
        }
+       yield put({type: "USER_VALID", payload: {user:response}});
     } catch (error) {
       yield put({type: "USER_NONVALID", payload: {error: error}});
+    }
+ }
+
+export function* doRegister(action) {
+    try {
+       const response = yield call(api.register, action.payload);
+
+       yield put({type: "REGISTER_SUCCESS", payload: {success:'User has ben created'}});
+    } catch (error) {
+      yield put({type: "REGISTER_FAILED", payload: {error: error}});
     }
  }
 

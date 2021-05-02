@@ -2,7 +2,9 @@ import { AccessTimeOutlined } from "@material-ui/icons";
 
 const initialState = {
     token: '',
-    error: ''
+    user: null ,
+    error: '',
+    success:""
 }
 
 export default function(state = initialState, action) {
@@ -12,6 +14,14 @@ export default function(state = initialState, action) {
             return {...state, token: response.token}
         case 'LOGIN_PENDING':
             return {...state, token: '', error: ''}
+        case 'REGISTER_SUCCESS':
+            return {...state, success: action.payload.success, error: ''}
+        case 'DO_PURGE_AUTH_MESSAGE':
+            return {...state, error: '', success: ''}
+        case 'REGISTER_FAILED':
+            return {...state, error: action.payload.error, success: ''}
+        case 'USER_VALID':
+            return {...state, user: action.payload.user}
         case 'LOGOUT':
             return {...state, token: ''}
         case 'USER_NONVALID':

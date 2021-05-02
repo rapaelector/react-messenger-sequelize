@@ -1,4 +1,4 @@
-import { all, takeEvery } from "redux-saga/effects";
+import { all, takeEvery, takeLatest } from "redux-saga/effects";
 import * as counterSaga  from './counterSaga'
 import * as authSaga  from './authSaga'
 import * as userSaga  from './userSaga'
@@ -13,8 +13,10 @@ function * rootSaga() {
         takeEvery('DO_CHECK_USER', authSaga.checkUser),
         takeEvery('DO_FETCH_USER_EXPRESS', userSaga.fetchUser),
         takeEvery('DO_FETCH_GROUP_CURRENT_USER', groupSaga.fetchGroupForUser),
-        takeEvery('DO_FETCH_MESSAGE_FOR_GROUP', messageSaga.fetchMessageBygroup),
+        takeLatest('DO_FETCH_MESSAGE_FOR_GROUP', messageSaga.fetchMessageBygroup),
         takeEvery('DO_SAVE_MESSAGE', messageSaga.saveMessage),
+        takeEvery('DO_CREATE_MESSAGE', messageSaga.doCreateGroupMessage),
+        takeLatest('DO_REGISTER', authSaga.doRegister),
     ])
 }
 

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import {Link} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     gridHeight:{
@@ -54,7 +55,7 @@ const Login = () => {
                     <Typography variant="h4" color="primary">Sing In</Typography>
                     <form className={classes.form}>
                         <TextField onChange={e => setEmail(e.target.value)} id="email" required name="email" autoFocus label="email" variant="outlined" margin="normal" fullWidth />
-                        <TextField onChange={e => setPassword(e.target.value)} id="password" required name="password" label="password" variant="outlined" margin="normal" fullWidth />
+                        <TextField onChange={e => setPassword(e.target.value)} id="password" type="password" required name="password" label="password" variant="outlined" margin="normal" fullWidth />
                         {error ? <Alert severity="error">
                             <AlertTitle>Error</AlertTitle>
                             {error}
@@ -63,7 +64,7 @@ const Login = () => {
                     </form>
                     <Grid container direction="row" justify="space-between">
                         <Grid item>forgot password?</Grid>
-                        <Grid item>create new profile?</Grid>
+                        <Grid item><Link to="/register">create new profile?</Link></Grid>
                     </Grid>
                 </Paper>
             </Grid>

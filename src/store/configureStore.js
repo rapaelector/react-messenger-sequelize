@@ -7,7 +7,7 @@ import rootReducer from '../reducers';
 const persistConfig = {
   key: 'root',
   storage,
-  whiteList:['counter']
+  blacklist: ['group']
 };
 
 const composeEnhancers =  typeof window === 'object' && window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] ? 

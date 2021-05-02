@@ -7,6 +7,9 @@ const UserGroup = require('../../models/UserGroup');
 const Message = require('../../models/Message');
 const { Op } = require("sequelize");
 const bodyParser = require("body-parser");
+const httpRes = require("http-response-status-code")
+const serializer = require("sequelize-to-json")
+const userSheme = require('../sheme/userSheme')
 
 var app = express()
 
@@ -15,13 +18,42 @@ app.use(express.json()) // for parsing application/json
 
 
 
+
+
 // list all user
 router.get('/', (req, res) => User.findAll().then(
     users => {
-        res.json(users)
+        res.json(serializer.serializeMany(users, User, userSheme))
         res.sendStatus(200)
     }
-).catch(e => console.log(e)));  
+).catch(e => console.log(e))); 
+
+// find user by id
+
+router.get('/:id([0-9]+)', (req, res) => {
+    const {id} = req.params;
+    User.findOne({
+        where: {
+            id: id
+        },
+        include: Group
+    }).then(
+        user => {
+            if (!user) {
+                res.json({
+                    error: "User not found"
+                })
+                res.sendStatus(httpRes.NOT_FOUND)
+                res.send();
+                return
+            }
+            const userSerializer  = new serializer(User, userSheme);
+            res.json(userSerializer.serialize(user))
+            res.sendStatus(200)
+        }
+    ).catch(e => console.log(e))
+}
+);
 
 // create user
 

@@ -10,6 +10,7 @@ const { Op } = require("sequelize");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
+const httpRes = require('http-response-status-code')
 
 
 var app = express()
@@ -31,7 +32,8 @@ router.post('/register', async(req, res, next) => {
             firstName, 
             lastName 
         }).then(user => {
-            res.status(204)
+            console.log(user)
+            res.status(httpRes.CREATED)
             res.json(user)
             res.send()
         }).catch((e)=> {
@@ -43,13 +45,13 @@ router.post('/register', async(req, res, next) => {
                 })
             })
             // let result = JSON.stringify(errorList)
-            res.status(401)
+            res.status(httpRes.BAD_REQUEST)
             res.json(errorList)
             res.send()
         })
     } catch(e) {
         console.log(e)
-        res.status(400)
+        res.status(httpRes.BAD_REQUEST)
         res.json(e)
         res.send()
     }
@@ -59,6 +61,7 @@ router.post('/register', async(req, res, next) => {
 // list all user
 router.post('/login', async(req, res, next) => {
     const {email, password} = req.body;
+    
     const currentUser = null;
     const user = await User.findOne({
         where:{
@@ -67,7 +70,7 @@ router.post('/login', async(req, res, next) => {
     })
     if (!user) {
         res.status(404)
-        res.json('User not found')
+        res.json('Bad Credential')
         res.send();
         // return;
     }
@@ -76,7 +79,7 @@ router.post('/login', async(req, res, next) => {
 
     if (!match) {
         res.status(404)
-        res.json('Error Credential')
+        res.json('Bad Credential')
         res.send();
         // return;
     }

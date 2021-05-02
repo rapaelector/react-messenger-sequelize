@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client'
 
 
-const socket = io.connect('http://localhost:4000');
+const socket = io.connect(process.env.REACT_APP_API_SOKET_HOST);
 const Counter = () => {
     const counter = useSelector(state => state.counter.count)
     const dispatch = useDispatch()
